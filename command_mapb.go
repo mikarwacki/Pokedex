@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-func commandMapB(config *Config) error {
+func commandMapB(config *Config, commandParam string) error {
 	location, err := config.pokeApiClient.ListLocations(config.PreviousURL)
 	if err != nil {
 		fmt.Println("Error getting the locations")
