@@ -1,34 +1,16 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"io"
-	"net/http"
 )
 
 func commandMapB(config *Config) error {
-	if (config.PreviousURL) == nil {
-		fmt.Print("There is no previous location")
-		return nil
-	}
-
-	res, err := http.Get(*(config.PreviousURL))
+	location, err := config.pokeApiClient.ListLocations(config.PreviousURL)
 	if err != nil {
-		return err
-	}
-	defer res.Body.Close()
-
-	data, err := io.ReadAll(res.Body)
-	if err != nil {
+		fmt.Println("Error getting the locations")
 		return err
 	}
 
-	var location Location
-	err = json.Unmarshal(data, &location)
-	if err != nil {
-		return err
-	}
 	for _, result := range location.Results {
 		fmt.Println(result.Name)
 	}

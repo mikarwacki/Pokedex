@@ -5,11 +5,12 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/mikarwacki/pokedex/internal/pokeapi"
 )
 
-func startRepl() {
+func startRepl(config *Config) {
 	scanner := bufio.NewScanner(os.Stdin)
-	config := Config{NextURL: locationUrl}
 	for {
 		fmt.Print("Pokedex> ")
 		scanner.Scan()
@@ -23,7 +24,7 @@ func startRepl() {
 		commandName := words[0]
 
 		if command, ok := commands[commandName]; ok {
-			err := command.callback(&config)
+			err := command.callback(config)
 			if err != nil {
 				fmt.Println(err)
 				continue
@@ -32,6 +33,7 @@ func startRepl() {
 			fmt.Println("Unknown command")
 			continue
 		}
+		fmt.Println()
 	}
 }
 
@@ -72,17 +74,8 @@ func getCommands() map[string]cliCommand {
 	}
 }
 
-type Location struct {
-	Count    int     `json:"count"`
-	Next     string  `json:"next"`
-	Previous *string `json:"previous"`
-	Results  []struct {
-		Name string `json:"name"`
-		URL  string `json:"url"`
-	} `json:"results"`
-}
-
 type Config struct {
-	NextURL     string
-	PreviousURL *string
+	pokeApiClient pokeapi.Client
+	NextURL       *string
+	PreviousURL   *string
 }

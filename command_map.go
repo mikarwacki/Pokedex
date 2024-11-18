@@ -1,29 +1,16 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"io"
-	"net/http"
 )
 
 func commandMap(config *Config) error {
-	res, err := http.Get(config.NextURL)
+	location, err := config.pokeApiClient.ListLocations(config.NextURL)
 	if err != nil {
-		return err
-	}
-	defer res.Body.Close()
-
-	data, err := io.ReadAll(res.Body)
-	if err != nil {
+		fmt.Println("Error getting the locations")
 		return err
 	}
 
-	var location Location
-	err = json.Unmarshal(data, &location)
-	if err != nil {
-		return err
-	}
 	for _, result := range location.Results {
 		fmt.Println(result.Name)
 	}
