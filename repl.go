@@ -81,6 +81,11 @@ func getCommands() map[string]cliCommand {
 			description: "Share details about location",
 			callback:    commandExplore,
 		},
+		"catch": {
+			name:        "catch",
+			description: "Try to catch a pokemon by giving its name",
+			callback:    commandCatch,
+		},
 	}
 }
 
@@ -88,4 +93,5 @@ type Config struct {
 	pokeApiClient pokeapi.Client
 	NextURL       *string
 	PreviousURL   *string
+	pokedex       map[string]pokeapi.Pokemon
 }
